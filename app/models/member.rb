@@ -4,6 +4,7 @@ class Member < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :graduating_class, class_name: 'GraduatingClass', foreign_key: :graduating_class_id
+  belongs_to :school
   has_many :affiliations
   has_many :organizations, through: :affiliations
   has_many :talent_assignments
@@ -12,6 +13,8 @@ class Member < ActiveRecord::Base
   has_many :neighborhoods, through: :residences
   has_many :participations
   has_many :events, through: :participations, source: :network_event
+  has_many :cohortians
+  has_many :cohorts, through: :cohortians
 
   def self.search(query)
     if query.present?

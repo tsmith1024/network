@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823032921) do
+ActiveRecord::Schema.define(version: 20160824180110) do
 
   create_table "affiliations", force: :cascade do |t|
     t.integer  "member_id"
@@ -28,11 +28,34 @@ ActiveRecord::Schema.define(version: 20160823032921) do
     t.datetime "updated_at",       null: false
   end
 
+  create_table "cohortians", force: :cascade do |t|
+    t.integer  "member_id"
+    t.integer  "cohort_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cohorts", force: :cascade do |t|
     t.string   "name"
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "extracurricular_activities", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "extracurricular_activity_assignments", force: :cascade do |t|
+    t.integer  "member_id"
+    t.integer  "extracurricular_activity_id"
+    t.integer  "user_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "graduating_class_assignments", force: :cascade do |t|
@@ -92,6 +115,7 @@ ActiveRecord::Schema.define(version: 20160823032921) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.integer  "graduating_class_id"
+    t.integer  "school_id"
   end
 
   create_table "neighborhoods", force: :cascade do |t|

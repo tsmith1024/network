@@ -4,7 +4,7 @@ class MembersController < ApplicationController
   # GET /members
   # GET /members.json
   def index
-    @members = Member.order(:first_name, :last_name)
+    @members = Member.order(:first_name, :last_name).page params[:page]
     if params[:q].present?
       if request.xhr?
         @members = @members.limit(25).search(params[:q][:term])
@@ -76,6 +76,6 @@ class MembersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def member_params
-      params.require(:member).permit(:first_name, :last_name, :phone, :email, :identity, :affiliation, :address, :city, :state, :zip_code, :shirt_size, :shirt_received, :place_of_worship, :recruitment, :community_networks, :extra_groups, :other_networks, :graduating_class_id, :organization_ids => [], :neighborhood_ids => [], talent_ids: [])
+      params.require(:member).permit(:first_name, :last_name, :phone, :email, :identity, :affiliation, :address, :city, :state, :zip_code, :shirt_size, :shirt_received, :place_of_worship, :recruitment, :community_networks, :extra_groups, :other_networks, :graduating_class_id, :organization_ids => [], :neighborhood_ids => [], talent_ids: [], :cohort_ids => [])
     end
 end
