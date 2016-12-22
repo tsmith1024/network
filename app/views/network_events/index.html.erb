@@ -3,30 +3,112 @@
     <span class="glyphicon glyphicon-plus"></span>
     New Event
   <% end %>
+  <%= link_to "network_events.csv", class: 'btn btn-primary' do %>
+    <span class="glyphicon glyphicon-save"></span>
+    Download
+  <% end %>
   <h1>Listing events</h1>
   
-<%= form_tag network_events_path, :method => :get do %>
-   <div class="container">
-      <div class='col-md-6'>
-          <div class="form-group">
-              <div class='input-group date' id='startdatepicker'>
-                  <input type='text' class="form-control" name="start_date"/>
-                  <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
-              </div>
-          </div>
+<%= form_tag network_events_path, :method => :get, class: "form-horizontal" do %>
+  <div class="container">
+    <div class='col-md-5'>
+        <div class="form-group">
+            <div class='input-group date' id='startdatepicker'>
+                <input type='text' class="form-control" name="start_date"/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+      Through
+    </div>
+    <div class='col-md-5'>
+        <div class="form-group">
+            <div class='input-group date' id='enddatepicker'>
+                <input type='text' class="form-control" name="end_date" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <%= select_tag :program_ids, 
+              options_from_collection_for_select(
+                Program.order(:name).all, 
+                :id, 
+                :name,
+                params[:program_ids]
+              ),
+              class: "select2 form-control", 
+              multiple: true, 
+              data: { placeholder: 'Filter by program' }  %>
       </div>
-      <div class='col-md-6'>
-          <div class="form-group">
-              <div class='input-group date' id='enddatepicker'>
-                  <input type='text' class="form-control" name="end_date" />
-                  <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
-              </div>
-          </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <%= select_tag :school_ids, 
+              options_from_collection_for_select(
+                School.order(:name).all, 
+                :id, 
+                :name,
+                params[:school_ids]
+              ),
+              class: "select2 form-control", 
+              multiple: true, 
+              data: { placeholder: 'Filter by school' }  %>
       </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <%= select_tag :organization_ids, 
+              options_from_collection_for_select(
+                Organization.order(:name).all, 
+                :id, 
+                :name,
+                params[:organization_ids]
+              ),
+              class: "select2 form-control", 
+              multiple: true, 
+              data: { placeholder: 'Filter by organization' }  %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <%= select_tag :cohort_ids, 
+              options_from_collection_for_select(
+                Cohort.order(:name).all, 
+                :id, 
+                :name,
+                params[:cohort_ids]
+              ),
+              class: "select2 form-control", 
+              multiple: true, 
+              data: { placeholder: 'Filter by cohort' }  %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <%= select_tag :graduating_class_ids, 
+              options_from_collection_for_select(
+                GraduatingClass.order(:year).all, 
+                :id, 
+                :name,
+                params[:graduating_class_ids]
+              ),
+              class: "select2 form-control", 
+              multiple: true, 
+              data: { placeholder: 'Filter by graduating class' }  %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-12">
+        <%= submit_tag "Filter events", class: "btn btn-secondary"%>
+      </div>
+    </div>
   </div>
   <script type="text/javascript">
       $(function () {
@@ -48,7 +130,6 @@
           });
       });
   </script> 
-  <%= submit_tag "Filter by date", class: "btn btn-secondary"%>
 <% end %>
 
 </div>
@@ -61,8 +142,10 @@
             <th><%= sortable "program"%></th>
             <th><%= sortable "location"%></th>
             <th>Organization(s)</th>
+            <th>Volunteer(s)</th>
             <th><%= sortable "scheduled_at", "Scheduled at"%></th>
             <th></th>
+        <th></th>
         <th></th>
         <th></th>
       </tr>
@@ -74,10 +157,12 @@
         <td><%= network_event.program.try(:name) %></td>
         <td><%= network_event.location.try(:name) %></td>
         <td><%= network_event.organizations.map(&:name).join(', ') %></td>
-        <td><%= network_event.scheduled_at %></td>
+        <td><%= network_event.volunteers.map(&:name).join(', ') %></td>
+        <td><%= network_event.scheduled_at.to_formatted_s(:long) %></td>
         <td><%= link_to 'Show', network_event %></td>
         <td><%= link_to 'Edit', edit_network_event_path(network_event) %></td>
         <td><%= link_to 'Destroy', network_event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= button_tag "Copy", data: {"clipboard-text" => clip_event_info(network_event), "toggle" => "tooltip", "placement" => "right"}, :title => clip_event_info(network_event), :class =>'copy_button btn btn-primary'%></td>
       <% end %>
     </tbody>
   </table>

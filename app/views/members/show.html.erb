@@ -26,9 +26,6 @@
   <dt>Identity:</dt>
   <dd><%= @member.identity %></dd>
 
-  <dt>Affiliation:</dt>
-  <dd><%= @member.affiliation %></dd>
-
   <dt>Cohorts:</dt>
   <% @member.cohorts.each do |cohort|%>
   <dd><%= cohort.name %></dd>
@@ -39,6 +36,9 @@
   <dd><%= organization.name %></dd>
   <% end %>
 
+  <dt>School:</dt>
+  <dd><%= @member.school.try(:name) %></dd>
+  
   <dt>Graduation Class:</dt>
   <dd><%= @member.graduation_year %></dd>
 
@@ -68,6 +68,9 @@
   <dt>Talents:</dt>
   <dd><%= @member.talent_list %></dd>
 
+  <dt>Extracurricular Activities:</dt>
+  <dd><%= @member.extracurricular_activities_list %></dd>
+  
   <dt>Place of worship:</dt>
   <dd><%= @member.place_of_worship %></dd>
 
@@ -87,6 +90,43 @@
   <dd><%= @member.user.try(:email) %></dd>
 
 </dl>
+
+<h2> Communications</h2>
+<div class="">
+<%= link_to new_member_communication_path(@member) , class: 'btn btn-primary' do%>
+  <span class='glyphicon glyphicon-plus'></span>
+  Record New Communication
+<% end %>
+</div>
+<% if @member.communications.any? %>
+ <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Kind</th>
+          <th>Notes</th>
+          <th>Contacted on</th> 
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%= content_tag_for(:tr, @member.communications) do |communication| %>
+          <td><%= communication.kind %></td>
+          <td><%= communication.notes %></td>
+          <td><%= communication.contacted_on %></td>
+          <td><%= link_to 'Show', member_communication_path(@member, communication) %></td>
+          <td><%= link_to 'Edit', edit_member_communication_path(@member, communication) %></td>
+          <td><%= link_to 'Destroy', member_communication_path(@member, communication), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  No communications recorded yet.
+<% end %>
 
 <h2>Events Attended</h2>
 

@@ -1,0 +1,17 @@
+<div class="page-header">
+  <h1>Member Sign Up</h1> 
+  <h1><%= @network_event.name %></h1>
+  <div>
+      <%= select_tag :member_ids, 
+            options_from_collection_for_select([], :id, :text),
+            class: "select2 ajax form-control", 
+            multiple: false, 
+            data: { ajax: { url: members_path }, placeholder: 'Find Member' }  %>
+  </div>
+</div>
+<div id="create">
+  <%= render 'create' %>
+</div>
+<div id="confirm">
+  <%= render 'confirm' %>
+</div>

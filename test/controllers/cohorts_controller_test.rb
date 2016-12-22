@@ -4,7 +4,7 @@ class CohortsControllerTest < ActionController::TestCase
   include Devise::TestHelpers 
   
   setup do
-    @cohort = cohorts(:one)
+    @cohort = cohorts(:purple)
     sign_in users(:one)
   end
 
@@ -21,7 +21,7 @@ class CohortsControllerTest < ActionController::TestCase
 
   test "should create cohort" do
     assert_difference('Cohort.count') do
-      post :create, cohort: { name: @cohort.name }
+      post :create, cohort: { name: @cohort.name + 'test' }
     end
 
     assert_redirected_to cohort_path(assigns(:cohort))
@@ -38,7 +38,7 @@ class CohortsControllerTest < ActionController::TestCase
   end
 
   test "should update cohort" do
-    patch :update, id: @cohort, cohort: { name: @cohort.name }
+    patch :update, id: @cohort, cohort: { name: @cohort.name + 'test' }
     assert_redirected_to cohort_path(assigns(:cohort))
   end
 

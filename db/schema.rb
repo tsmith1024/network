@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824180110) do
+ActiveRecord::Schema.define(version: 20161130205854) do
 
   create_table "affiliations", force: :cascade do |t|
     t.integer  "member_id"
@@ -41,6 +41,16 @@ ActiveRecord::Schema.define(version: 20160824180110) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "communications", force: :cascade do |t|
+    t.string   "kind"
+    t.text     "notes"
+    t.integer  "member_id"
+    t.integer  "user_id"
+    t.datetime "contacted_on"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "extracurricular_activities", force: :cascade do |t|
@@ -99,7 +109,6 @@ ActiveRecord::Schema.define(version: 20160824180110) do
     t.string   "phone"
     t.string   "email"
     t.string   "identity"
-    t.string   "affiliation"
     t.string   "address"
     t.string   "city"
     t.string   "state"
@@ -116,6 +125,7 @@ ActiveRecord::Schema.define(version: 20160824180110) do
     t.datetime "updated_at",          null: false
     t.integer  "graduating_class_id"
     t.integer  "school_id"
+    t.string   "mongo_id"
   end
 
   create_table "neighborhoods", force: :cascade do |t|
@@ -140,10 +150,13 @@ ActiveRecord::Schema.define(version: 20160824180110) do
     t.integer  "location_id"
     t.datetime "scheduled_at"
     t.integer  "user_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "program_id"
-    t.integer  "duration",     default: 60
+    t.integer  "duration",             default: 60
+    t.boolean  "needs_transport"
+    t.datetime "transport_ordered_on"
+    t.text     "notes"
   end
 
   add_index "network_events", ["program_id"], name: "index_network_events_on_program_id"

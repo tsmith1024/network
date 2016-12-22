@@ -9,16 +9,23 @@ class Member < ActiveRecord::Base
   has_many :organizations, through: :affiliations
   has_many :talent_assignments
   has_many :talents, through: :talent_assignments
+  has_many :extracurricular_activity_assignments
+  has_many :extracurricular_activities, through: :extracurricular_activity_assignments
   has_many :residences
   has_many :neighborhoods, through: :residences
   has_many :participations
   has_many :events, through: :participations, source: :network_event
   has_many :cohortians
   has_many :cohorts, through: :cohortians
+  has_many :communications  
 
   def self.search(query)
     if query.present?
-      condition = 'first_name LIKE :search OR last_name LIKE :search'
+      if Rails.env.production?
+        condition = 'first_name ILIKE :search OR last_name ILIKE :search'
+      else
+        condition = 'first_name LIKE :search OR last_name LIKE :search'
+      end
       query.split(' ').inject(self) do |conditions, term|
         conditions.where([condition, search: "#{term}%"])
       end
@@ -59,5 +66,9 @@ class Member < ActiveRecord::Base
 
   def talent_list
     talents.map(&:name).compact.sort.join(', ')
+  end
+  
+  def extracurricular_activities_list
+    extracurricular_activities.map(&:name).compact.sort.join(', ')
   end
 end

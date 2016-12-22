@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
-gem 'rails_12factor'
+gem 'rails_12factor', group: :production
 gem 'puma'
 # Use Postgresql in production
 # gem 'pg'
@@ -45,12 +45,16 @@ gem 'bootstrap3-datetimepicker-rails', '~> 4.17.37'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+#Gem for copying to clipboard
+gem 'zeroclipboard-rails'
+
 # Network Gems
 gem 'devise'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'timecop'
 end
 
 group :development do

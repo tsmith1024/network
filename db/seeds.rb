@@ -28,6 +28,11 @@ gear_up = Cohort.create(name: 'Gear-Up', user_id: user.id)
 health_academy = Cohort.create(name: 'Academy of Health Sciences', user_id: user.id)
 educator_academy = Cohort.create(name: 'Academy of Urban Educators', user_id: user.id)
 
+marching_band = ExtracurricularActivity.create(name: 'Marching Band', user_id: user.id)
+football = ExtracurricularActivity.create(name: 'Football', user_id: user.id)
+chess_club = ExtracurricularActivity.create(name: 'Chess Club', user_id: user.id)
+theater = ExtracurricularActivity.create(name: 'Theater', user_id: user.id)
+
 Location.create(
   name: 'Tuggle Elementary',
   address_one: '1234 Broad St N',
@@ -105,14 +110,17 @@ Program.create(name: 'Connector Table Meeting', user_id: user.id)
 Program.create(name: 'Core Team Meeting', user_id: user.id)
 
 eab = Organization.create(name: 'EAB', created_by_id: user.id)
-Organization.create(name: 'Regions Bank', created_by_id: user.id)
-Organization.create(name: 'Publix', created_by_id: user.id)
-Organization.create(name: 'Code for Birmingham', created_by_id: user.id)
-Organization.create(name: 'Birmingham Chamber of Commerce', created_by_id: user.id)
-
+regions = Organization.create(name: 'Regions Bank', created_by_id: user.id)
+publix = Organization.create(name: 'Publix', created_by_id: user.id)
+code = Organization.create(name: 'Code for Birmingham', created_by_id: user.id)
+chamber = Organization.create(name: 'Birmingham Chamber of Commerce', created_by_id: user.id)
+organizations = [eab, regions, publix, code, chamber]
 
 carver = School.create(name: 'Carver High School', user_id: user.id)
 tuggle = School.create(name: 'Tuggle Elementary School', user_id: user.id)
+hudson = School.create(name: 'Hudson K-8', user_id: user.id)
+ramsey = School.create(name: 'Ramsey High School', user_id: user.id)
+school_choice = [carver, tuggle, hudson, ramsey]
 
 Talent.create(name: 'Arts', user_id: user.id)
 Talent.create(name: 'Math', user_id: user.id)
@@ -127,11 +135,11 @@ Location.all.each do |location|
       name: "#{location.name} #{program.name}",
       program: program,
       location: location,
-      organizations: [eab],
+      organizations: organizations.sample(1),
       site_contacts: [sean, victoria],
       school_contacts: [chris],
       volunteers: [andrew],
-      schools: [carver, tuggle],
+      schools: school_choice.sample(2),
       graduating_classes: [class_of_2016, class_of_2017],
       cohorts: [gear_up],
       scheduled_at: rand(14).days.from_now,
