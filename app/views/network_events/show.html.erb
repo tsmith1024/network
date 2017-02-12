@@ -14,6 +14,9 @@
   <dt>Name:</dt>
   <dd><%= @network_event.name %></dd>
 
+  <dt>Status:</dt>
+  <dd><%= @network_event.status.try(:titleize) %></dd>
+
   <dt>Program:</dt>
   <dd><%= @network_event.program.try(:name) %></dd>
 
@@ -87,8 +90,11 @@
   <dd><%= @network_event.scheduled_at %></dd>
 
   <dt>Ends At:</dt>
-  <dd><%= @network_event.scheduled_at + @network_event.duration.minutes %></dd>
-  
+  <dd><% if @network_event.scheduled_at.present? %>
+        <%= @network_event.scheduled_at + @network_event.duration.minutes %>
+      <% end %>
+  </dd>
+      
   <dt>Transportation needed:</dt>
   <dd><%= @network_event.needs_transport %></dd>
 
@@ -101,6 +107,15 @@
   <dt>Creator:</dt>
   <dd><%= @network_event.user.try(:email) %></dd>
 
+  <dt>Sign Up:</dt>
+  <dd>
+    <div class="sign_up__attendee">
+      <%= link_to 'Sign Up Attendee', new_network_event_sign_up_path(:network_event_id => @network_event.id, :level => 'attendee') %>
+    </div>
+    <div class="sign_up__volunteer">
+      <%= link_to 'Sign Up Volunteer', new_network_event_sign_up_path(:network_event_id => @network_event.id, :level => 'volunteer') %>
+    </div>
+  </dd>
 </dl>
 
 <h2>Invitees</h2>

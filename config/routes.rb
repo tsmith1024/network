@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :common_tasks
   resources :neighborhoods
   resources :extracurricular_activities
   resources :talents
@@ -10,8 +11,10 @@ Rails.application.routes.draw do
   
   resources :network_events do
     resources :sign_ups, only: [:new, :show, :create, :edit, :update]
+    resources :check_ins, only: [:new, :show, :create]
     collection do
       resources :sign_ups, only:[:index]
+      resources :check_ins, only:[:index]
     end
   end
   

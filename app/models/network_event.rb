@@ -1,7 +1,6 @@
 class NetworkEvent < ActiveRecord::Base
   validates :name, presence: true
   validates :program_id, presence: true
-  validates :scheduled_at, presence: true
   validates :location_id, presence: true
   
 
@@ -37,32 +36,55 @@ class NetworkEvent < ActiveRecord::Base
   def self.in_date_range(start_date, end_date)
     start_date = Date.strptime(start_date, '%A %B %d %Y')
     end_date = Date.strptime(end_date, '%A %B %d %Y')
-    where(scheduled_at: start_date.beginning_of_day..end_date.end_of_day)
+    where(scheduled_at: [start_date.beginning_of_day..end_date.end_of_day, nil])
   end
 
   def self.default_date_range
     start_date= Date.today
     end_date = Date.today + 6.days
-    where(scheduled_at: start_date.beginning_of_day..end_date.end_of_day)
+    where(scheduled_at: [start_date.beginning_of_day..end_date.end_of_day, nil])
   end
 
+  def self.statuses
+    [
+      "working",
+      "confirmed", 
+      "scheduled", 
+      "completed", 
+      "declined", 
+      "need to contact and pending further convo with supervisor"
+    ]
+  end
+        
   def date
-    scheduled_at.to_date
+    if scheduled_at.present?
+      scheduled_at.to_date
+    else
+      nil
+    end
   end
   
   def invitees
-    member_scope = Member.uniq
-
-    if cohorts.any?
-      member_scope = member_scope.joins(:cohorts).where(cohorts: { id: cohort_ids })
-    end
-
-    if schools.any?
-      member_scope = member_scope.where(school_id: school_ids)
-    end
-
-    if graduating_classes.any?
-      member_scope = member_scope.where(graduating_class_id: graduating_class_ids)
+    if cohorts.any? || schools.any? || graduating_classes.any?
+      member_scope = Member.uniq
+  
+      if cohorts.any?
+        member_scope = member_scope.
+          joins(:cohorts).
+          where(cohorts: { id: cohort_ids }).
+          having("COUNT(cohorts.id) = #{cohort_ids.count}").
+          group("members.id")
+      end
+  
+      if schools.any?
+        member_scope = member_scope.where(school_id: school_ids)
+      end
+  
+      if graduating_classes.any?
+        member_scope = member_scope.where(graduating_class_id: graduating_class_ids)
+      end
+    else
+      member_scope = Member.none
     end
 
     member_scope
@@ -73,7 +95,11 @@ class NetworkEvent < ActiveRecord::Base
   end
   
   def name_with_date
-    name + ' (' + scheduled_at.to_formatted_s(:long) + ')'
+    if scheduled_at.present?
+      name + ' (' + scheduled_at.to_formatted_s(:long) + ')'
+    else
+      name
+    end
   end
 
   def program_name
@@ -81,11 +107,19 @@ class NetworkEvent < ActiveRecord::Base
   end
   
   def start_time
-    scheduled_at.to_time
+    if scheduled_at.present?
+      scheduled_at.to_time
+    else
+      nil
+    end
   end
   
   def stop_time
-    (scheduled_at + duration.minutes).to_time
+    if scheduled_at.present?
+      (scheduled_at + duration.minutes).to_time
+    else
+      nil
+    end
   end
   
 end

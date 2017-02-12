@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161130205854) do
+ActiveRecord::Schema.define(version: 20170125181232) do
 
   create_table "affiliations", force: :cascade do |t|
     t.integer  "member_id"
@@ -37,6 +37,13 @@ ActiveRecord::Schema.define(version: 20161130205854) do
   end
 
   create_table "cohorts", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "common_tasks", force: :cascade do |t|
     t.string   "name"
     t.integer  "user_id"
     t.datetime "created_at", null: false
@@ -157,6 +164,8 @@ ActiveRecord::Schema.define(version: 20161130205854) do
     t.boolean  "needs_transport"
     t.datetime "transport_ordered_on"
     t.text     "notes"
+    t.string   "status"
+    t.string   "mongo_id"
   end
 
   add_index "network_events", ["program_id"], name: "index_network_events_on_program_id"
